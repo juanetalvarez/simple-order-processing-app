@@ -5,6 +5,12 @@ pipeline {
     tools {
         maven 'maven-3.9.9'
     }
+    parameters {
+        string(name: 'DEPLOY_ENV',
+            defaultValue: 'dev',
+            description: 'Environment to Deploy (dev or prod)'
+        )
+    }
     stages {
         stage('Checkout Code') {
             steps{
@@ -15,6 +21,15 @@ pipeline {
         stage('Build with Maven') {
             steps{
                 sh 'mvn clean package'
+            }
+        }
+
+        stage('Deploy to PROD') {
+            when {
+                expression { params.DEPLOY_ENV == 'prod' }
+            }
+            steps {
+                echo 'Deploying Application to PRODUCTION...'
             }
         }
     }
