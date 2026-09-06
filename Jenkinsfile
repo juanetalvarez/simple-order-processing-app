@@ -1,11 +1,26 @@
 pipeline {
     agent any
-
     stages {
-        stage('Git checkout') {
-            steps {
-                echo 'Git repository successfully checked out'
+        stage('Checkout Code') {
+            steps{
+                git branch: 'main', url: 'https://github.com/juanetalvarez/simple-order-processing-app.git'
+            }
+        }
+
+        stage('Build with Maven') {
+            steps{
+                sh '/opt/maven/apache-maven-3.9.9/bin clean package'
             }
         }
     }
+    post {
+        success {
+            junit '**/target/surefire-reports/TEST-*.xml'
+            archiveArtifacts 'target/*.jar'
+        }
+        failure {
+            echo 'Build Failed'
+        }
+    }
+
 }
