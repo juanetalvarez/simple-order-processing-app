@@ -3,7 +3,7 @@ pipeline {
     environment {
         MAVEN_VERSION = "3.9.9"
         MAVEN_HOME="/opt/apache-maven-${env.MAVEN_VERSION}"
-        PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
+        PATH = "/opt/apache-maven-${env.MAVEN_VERSION}/bin:${env.PATH}"
     }
     stages {
         stage('Checkout Code') {
