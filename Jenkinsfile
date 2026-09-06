@@ -2,8 +2,8 @@ pipeline {
     agent any
     environment {
         MAVEN_VERSION = "3.9.9"
-        MAVEN_HOME="/opt/apache-maven-${MAVEN_VERSION}"
-        PATH = "${MAVEN_HOME}/bin:${env.PATH}"
+        MAVEN_HOME="/opt/apache-maven-${env.MAVEN_VERSION}"
+        PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
     }
     stages {
         stage('Checkout Code') {
