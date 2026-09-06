@@ -3,7 +3,6 @@ pipeline {
     environment {
         MAVEN_VERSION = "3.9.9"
         MAVEN_HOME="/opt/apache-maven-${env.MAVEN_VERSION}"
-        PATH = "/opt/apache-maven-${env.MAVEN_VERSION}/bin:${env.PATH}"
     }
     stages {
         stage('Checkout Code') {
@@ -14,7 +13,7 @@ pipeline {
 
         stage('Build with Maven') {
             steps{
-                sh 'mvn clean package'
+                sh '${MAVEN_HOME}/bin/mvn clean package'
             }
         }
     }
