@@ -1,9 +1,9 @@
 pipeline {
-    agent any
-    environment {
-        MAVEN_VERSION = "3.9.9"
-        MAVEN_HOME="/opt/maven/apache-maven-${env.MAVEN_VERSION}"
-        PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
+    agent {
+        label 'mac-bycontroller-agent'
+    }
+    tools {
+        maven 'maven-3.9.9'
     }
     stages {
         stage('Checkout Code') {
