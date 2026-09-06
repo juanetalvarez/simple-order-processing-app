@@ -47,8 +47,8 @@ pipeline {
 
         stage('Approval') {
             steps{
-                input message: "Do you want to procced to deployment?"
-                ok: 'Yes, Deploy'
+                input message: "Do you want to procced to deployment?",
+                ok: 'Yes, Deploy',
                 submitter: 'admin'
             }
         }
