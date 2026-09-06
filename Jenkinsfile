@@ -17,7 +17,6 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/juanetalvarez/simple-order-processing-app.git'
             }
         }
-
         stage('Parallel Build and Test') {
             parallel {
                 stage('Build') {
@@ -32,7 +31,6 @@ pipeline {
                 }
             }
         }
-
         stage('Package') {
             steps{
                 sh 'mvn package'
@@ -47,6 +45,13 @@ pipeline {
             }
         }
 
+        stage('Approval') {
+            steps{
+                input message: "Do you want to procced to deployment?"
+                ok: 'Yes, Deploy'
+                submitter: 'admin'
+            }
+        }
         stage('Deploy to PROD') {
             when {
                 expression { params.DEPLOY_ENV == 'prod' }
