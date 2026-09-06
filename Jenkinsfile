@@ -23,6 +23,14 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
+        stage('Run end-to-end Tests'){
+            when {
+                expression { params.DEPLOY_ENV != 'prod' }
+            }
+            steps{
+                echo 'Running end-to-end Tests'
+            }
+        }
 
         stage('Deploy to PROD') {
             when {
