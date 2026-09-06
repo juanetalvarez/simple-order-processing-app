@@ -18,17 +18,32 @@ pipeline {
             }
         }
 
-        stage('Build with Maven') {
-            steps{
-                sh 'mvn clean package'
+        stage('Parallel Build and Test') {
+            parallel {
+                stage('Build') {
+                    steps{
+                        sh 'mvn clean compile'
+                    }
+                }
+                stage('Unit Tests') {
+                    steps{
+                        sh 'mvn test'
+                    }
+                }
             }
         }
-        stage('Run end-to-end Tests'){
+
+        stage('Package') {
+            steps{
+                sh 'mvn package'
+            }
+        }
+        stage('Run Integration Tests'){
             when {
                 expression { params.DEPLOY_ENV != 'prod' }
             }
             steps{
-                echo 'Running end-to-end Tests'
+                echo 'Running Integration Tests'
             }
         }
 
