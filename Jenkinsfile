@@ -5,12 +5,6 @@ pipeline {
     tools {
         maven 'maven-3.9.9'
     }
-    parameters {
-        string(name: 'DEPLOY_ENV',
-            defaultValue: 'dev',
-            description: 'Environment to Deploy (dev or prod)'
-        )
-    }
     stages {
         stage('Checkout Code') {
             steps{
@@ -37,9 +31,6 @@ pipeline {
             }
         }
         stage('Run Integration Tests'){
-            when {
-                expression { params.DEPLOY_ENV != 'prod' }
-            }
             steps{
                 echo 'Running Integration Tests'
             }
@@ -68,9 +59,6 @@ pipeline {
             }
         }
         stage('Deploy to PROD') {
-            when {
-                expression { params.DEPLOY_ENV == 'prod' }
-            }
             steps {
                 echo 'Starting Application Deployment to ...'
                 sh '''
@@ -88,7 +76,7 @@ pipeline {
     }
     post {
         success {
-            echo 'Pipeline Executed Successfully. Application DEPLOYED to ${DEPLOY_ENV}'
+            echo 'Pipeline Executed Successfully. Application DEPLOYED.'
         }
         failure {
             echo 'Build Failed. Please Check LOGS.'
