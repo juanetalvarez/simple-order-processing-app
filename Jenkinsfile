@@ -44,6 +44,21 @@ pipeline {
                 echo 'Running Integration Tests'
             }
         }
+        stage('Deploy to DEV') {
+            steps {
+                echo 'Starting Application Deployment to DEV...'
+                sh '''
+                    echo "Creating deployment directory..."
+                    mkdir -p /tmp/dev/simple-order-processing-app-deploy/
+
+                    echo "Copying JAR to deployment directory"
+                    cp target/*.jar /tmp/dev/simple-order-processing-app-deploy/
+
+                    echo "Listing deployed files"
+                    ls -l /tmp/dev/simple-order-processing-app-deploy/
+                '''
+            }
+        }
 
         stage('Approval') {
             steps{
@@ -57,17 +72,26 @@ pipeline {
                 expression { params.DEPLOY_ENV == 'prod' }
             }
             steps {
-                echo 'Deploying Application to PRODUCTION...'
+                echo 'Starting Application Deployment to ...'
+                sh '''
+                    echo "Creating deployment directory..."
+                    mkdir -p /tmp/prod/simple-order-processing-app-deploy/
+
+                    echo "Copying JAR to deployment directory"
+                    cp target/*.jar /tmp/prod/simple-order-processing-app-deploy/
+
+                    echo "Listing deployed files"
+                    ls -l /tmp/prod/simple-order-processing-app-deploy/
+                '''
             }
         }
     }
     post {
         success {
-            junit '**/target/surefire-reports/TEST-*.xml'
-            archiveArtifacts 'target/*.jar'
+            echo 'Pipeline Executed Successfully. Application DEPLOYED to ${DEPLOY_ENV}'
         }
         failure {
-            echo 'Build Failed'
+            echo 'Build Failed. Please Check LOGS.'
         }
     }
 
