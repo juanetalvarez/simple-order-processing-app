@@ -4,6 +4,7 @@ pipeline {
     }
     tools {
         maven 'maven-3.9.9'
+        jfrog 'jfrog-cli'
     }
     stages {
         stage('Checkout Code') {
@@ -33,6 +34,18 @@ pipeline {
         stage('Run Integration Tests'){
             steps{
                 echo 'Running Integration Tests'
+            }
+        }
+        stage('Publish to Artifactory') {
+            steps {
+                // Show the installed version of JFrog CLI.
+                jf '-v'
+                // Ping Artifactory.
+                jf 'rt ping'
+                // Upload artifac to a repository in Artifactory
+                jf 'rt u target/*.jar simple-order-processing-app-maven-dev-local/'
+                // Publish the build-info to Artifactory.
+                jf 'rt bp'
             }
         }
         stage('Deploy to DEV') {
