@@ -53,14 +53,14 @@ pipeline {
 
         stage('Approval') {
             steps{
-                input message: "Do you want to procced to deployment?",
-                ok: 'Yes, Deploy',
+                input message: "Do you want to procced to deployment PROD?",
+                ok: 'Yes, Deploy to PROD',
                 submitter: 'admin'
             }
         }
         stage('Deploy to PROD') {
             steps {
-                echo 'Starting Application Deployment to ...'
+                echo 'Starting Application Deployment to PROD...'
                 sh '''
                     echo "Creating deployment directory..."
                     mkdir -p /tmp/prod/simple-order-processing-app-deploy/
