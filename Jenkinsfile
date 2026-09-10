@@ -8,14 +8,16 @@ pipeline {
     }
     stages {
         stage('Checkout Code') {
-            steps{
+            steps {
+                // Checks the last commit for [ci skip] and deletes the triggered build
+                scmSkip(deleteBuild: true, skipPattern: '.*\\[skip ci\\].*')
                 git branch: 'main', url: 'https://github.com/juanetalvarez/simple-order-processing-app.git'
             }
         }
         stage('Parallel Build and Test') {
             parallel {
                 stage('Build') {
-                    steps{
+                    steps {
                         sh 'mvn clean compile'
                     }
                 }
@@ -109,7 +111,7 @@ pipeline {
         }
 
         stage('Approval') {
-            steps{
+            steps {
                 input message: "Do you want to procced to deployment PROD?",
                 ok: 'Yes, Deploy to PROD',
                 submitter: 'admin'
