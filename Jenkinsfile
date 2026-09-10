@@ -11,7 +11,7 @@ pipeline {
             steps {
                 // Checks the last commit for [ci skip] and deletes the triggered build
                 scmSkip(deleteBuild: true, skipPattern: '.*\\[skip ci\\].*')
-                git branch: 'main', url: 'https://github.com/juanetalvarez/simple-order-processing-app.git'
+                git branch: 'main', credentialsId: 'github-ssh-key', url: 'git@github.com:juanetalvarez/simple-order-processing-app.git'
             }
         }
         stage('Parallel Build and Test') {
