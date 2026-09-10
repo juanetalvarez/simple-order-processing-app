@@ -77,7 +77,7 @@ pipeline {
                         export GIT_TRACE=1
                         export GIT_TRANSFER_TRACE=1
                         export GIT_CURL_VERBOSE=1
-                        git config --global --unset credential.helper
+                        git config credential.helper ""
                         git push origin HEAD --tags
                     '''
                 }
