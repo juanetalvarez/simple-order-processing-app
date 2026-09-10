@@ -13,7 +13,7 @@ pipeline {
                 // Download the latest changes from remote repository (origin) while simultaneously cleaning up deleted remote branches and local tag
                 sh 'git fetch --prune --prune-tags origin'
                 // Checks the last commit for [ci skip] or [skip ci] and deletes the triggered build
-                scmSkip(deleteBuild: true, skipPattern: '.*(\\[ci skip\\]|\\[skip ci\\)].*')
+                scmSkip(deleteBuild: true, skipPattern: '.*(\\[ci skip\\]|\\[skip ci\\]).*')
             }
         }
         stage('Parallel Build and Test') {
