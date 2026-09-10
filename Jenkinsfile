@@ -60,6 +60,7 @@ pipeline {
                         git config --local user.name "Juan"
                         git add pom.xml
                         git commit -m "chore: release ${NEW_VERSION} [skip ci]"
+                        git fetch --prune --prune-tags origin
                         git tag -a "${NEW_VERSION}" -m "Release ${NEW_VERSION}"
                     """
                 }
