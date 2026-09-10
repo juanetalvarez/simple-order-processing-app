@@ -71,7 +71,8 @@ pipeline {
         stage('Publish to Git') {
             steps {
                 withCredentials([string(credentialsId: 'github-creds', variable: 'GIT_TOKEN')]) {
-                    sh "git push https://juanetalvarez:${GIT_TOKEN}@://github.com HEAD --tags"
+                    sh "git remote set-url origin https://juanetalvarez:${GIT_TOKEN}@://github.com"
+                    sh "git push origin HEAD --tags"
                 }
             }
         }
