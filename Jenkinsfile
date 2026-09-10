@@ -70,7 +70,7 @@ pipeline {
         }
         stage('Publish to Git') {
             steps {
-                withCredentials([gitUsernamePassword(credentialsId: 'github-pat-cred', gitToolName: 'Default')]) {
+                sshagent(credentials: ['github-ssh-key'], executable: '') {
                     sh 'git push origin HEAD --tags'
                 }
             }
