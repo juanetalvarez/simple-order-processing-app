@@ -70,7 +70,7 @@ pipeline {
         }
         stage('Publish to Git') {
             steps {
-                sshagent(credentials: ['github-ssh-key'], executable: '') {
+                sshagent(credentials: ['github-ssh-key']) {
                     sh '''
                         git config --local user.email "juanet.alvarez@gmail.com"
                         git config --local user.name "Juan"
@@ -78,7 +78,6 @@ pipeline {
                         export GIT_TRANSFER_TRACE=1
                         export GIT_CURL_VERBOSE=1
                         export GIT_TERMINAL_PROMPT=0
-                        git config credential.helper ""
                         git push origin HEAD --tags
                     '''
                 }
