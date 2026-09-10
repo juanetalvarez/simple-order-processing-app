@@ -71,7 +71,7 @@ pipeline {
         stage('Publish to Git') {
             steps {
                 sshagent(credentials: ['github-ssh-key'], executable: '') {
-                    sh 'git push origin HEAD --tags'
+                    sh 'git push origin HEAD:main'
                 }
             }
         }
