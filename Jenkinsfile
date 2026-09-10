@@ -26,16 +26,53 @@ pipeline {
                 }
             }
         }
-        stage('Package') {
-            steps{
-                sh 'mvn package'
-            }
-        }
         stage('Run Integration Tests'){
             steps{
                 echo 'Running Integration Tests'
             }
         }
+        stage('Calculate Next Version') {
+            steps {
+                script {
+                    // Calculate next semantic version using conventional commits
+                    def nextVersion = getNextSemanticVersion(
+                        majorPattern: '^[Bb]reaking.*',
+                        minorPattern: '^[Ff]eature.*',
+                        patchPattern: '^[Ff]ix.*'
+                    )
+
+                    env.NEW_VERSION = nextVersion.toString()
+                    echo "Calculated Next Version: ${env.NEW_VERSION}"
+                }
+            }
+        }
+        stage('Update pom.xml and package') {
+            steps {
+                // Update version in pom.xml using Maven versions plugin
+                sh "mvn versions:set -DnewVersion=${NEW_VERSION} -DgenerateBackupPoms=false clean package"
+            }
+        }
+        stage('Commit and Tag') {
+            steps {
+                script {
+                    sh """
+                        git config --local user.email "juanet.alvarez@gmail.com"
+                        git config --local user.name "Juan"
+                        git add pom.xml
+                        git commit -m "chore: release ${NEW_VERSION} [skip ci]"
+                        git tag -a "${NEW_VERSION}" -m "Release ${NEW_VERSION}"
+                    """
+                }
+            }
+        }
+        stage('Publish to Git') {
+            steps {
+                withCredentials([string(credentialsId: 'github-creds', variable: 'API_TOKEN')]) {
+                    sh "git push origin HEAD --tags"
+                }
+            }
+        }
+
         stage('Publish to Artifactory') {
             steps {
                 // Show the installed version of JFrog CLI.
@@ -48,6 +85,7 @@ pipeline {
                 jf 'rt bp'
             }
         }
+
         stage('Deploy to DEV') {
             steps {
                 echo 'Starting Application Deployment to DEV...'
