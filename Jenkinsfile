@@ -71,7 +71,14 @@ pipeline {
         stage('Publish to Git') {
             steps {
                 sshagent(credentials: ['github-ssh-key'], executable: '') {
-                    sh 'git push origin HEAD:main'
+                    sh '''
+                        git config --local user.email "juanet.alvarez@gmail.com"
+                        git config --local user.name "Juan"
+                        export GIT_TRACE=1
+                        export GIT_TRANSFER_TRACE=1
+                        export GIT_CURL_VERBOSE=1
+                        git push origin HEAD --tags
+                    '''
                 }
             }
         }
