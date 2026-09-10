@@ -9,11 +9,11 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                // Download the latest changes from remote repository (origin) while simultaneously cleaning up deleted remote branches and local tag
-                git fetch --prune --prune-tags origin
                 // Checks the last commit for [ci skip] and deletes the triggered build
                 scmSkip(deleteBuild: true, skipPattern: '.*\\[skip ci\\].*')
                 git branch: 'main', credentialsId: 'github-ssh-key', url: 'git@github.com:juanetalvarez/simple-order-processing-app.git'
+                // Download the latest changes from remote repository (origin) while simultaneously cleaning up deleted remote branches and local tag
+                git fetch --prune --prune-tags origin
             }
         }
         stage('Parallel Build and Test') {
