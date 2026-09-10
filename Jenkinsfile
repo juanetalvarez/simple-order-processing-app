@@ -77,6 +77,7 @@ pipeline {
                         export GIT_TRACE=1
                         export GIT_TRANSFER_TRACE=1
                         export GIT_CURL_VERBOSE=1
+                        export GIT_TERMINAL_PROMPT=0
                         git config credential.helper ""
                         git push origin HEAD --tags
                     '''
