@@ -43,7 +43,7 @@ pipeline {
                 // Ping Artifactory.
                 jf 'rt ping'
                 // Upload artifac to a repository in Artifactory
-                jf 'rt u **/target/*.jar simple-order-processing-app-maven-dev-local/'
+                jf 'rt u **/target/*.jar maven-dev-local/'
                 // Publish the build-info to Artifactory.
                 jf 'rt bp'
             }
@@ -56,6 +56,11 @@ pipeline {
                     mkdir -p /tmp/dev/simple-order-processing-app-deploy/
 
                     echo "Copying JAR to deployment directory"
+                    cd /tmp/dev/simple-order-processing-app-deploy/
+                '''
+                // Download the artifact
+                jf 'rt dl maven-dev-local/simple-order-processing-app-1.0-SNAPSHOT.jar'
+                sh '''
                     cp target/*.jar /tmp/dev/simple-order-processing-app-deploy/
 
                     echo "Listing deployed files"
