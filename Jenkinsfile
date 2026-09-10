@@ -50,36 +50,26 @@ pipeline {
         }
         stage('Update pom.xml and package') {
             steps {
-                // Update version in pom.xml using Maven versions plugin
+                // Update version in pom.xml using Maven versions plugin and package
                 sh "mvn versions:set -DnewVersion=${NEW_VERSION} -DgenerateBackupPoms=false clean package"
             }
         }
         stage('Commit and Tag') {
             steps {
                 script {
-                    sh """
-                        git config --local user.email "juanet.alvarez@gmail.com"
-                        git config --local user.name "Juan"
+                    sh '''
                         git add pom.xml
                         git commit -m "chore: release ${NEW_VERSION} [skip ci]"
                         git fetch --prune --prune-tags origin
                         git tag -a "${NEW_VERSION}" -m "Release ${NEW_VERSION}"
-                    """
+                    '''
                 }
             }
         }
         stage('Publish to Git') {
             steps {
                 sshagent(credentials: ['github-ssh-key']) {
-                    sh '''
-                        git config --local user.email "juanet.alvarez@gmail.com"
-                        git config --local user.name "Juan"
-                        export GIT_TRACE=1
-                        export GIT_TRANSFER_TRACE=1
-                        export GIT_CURL_VERBOSE=1
-                        export GIT_TERMINAL_PROMPT=0
-                        git push origin HEAD --tags
-                    '''
+                    sh ' git push origin HEAD --tags'
                 }
             }
         }
