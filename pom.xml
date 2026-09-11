@@ -6,7 +6,7 @@
 
     <groupId>com.mycompany.orderapp</groupId>
     <artifactId>simple-order-processing-app</artifactId>
-    <version>0.0.14</version>
+    <version>0.0.15</version>
     <name>simple-order-processing-app</name>
 
     <properties>
