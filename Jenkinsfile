@@ -129,6 +129,7 @@ pipeline {
                 '''
                 // Download the artifact
                 jf 'rt dl maven-dev-local/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/prod/simple-order-processing-app-deploy/'
+                // Promote the artifact
                 jf 'rt bpr ${JOB_NAME} ${BUILD_NUMBER} maven-prod-local --comment="Released via Jenkins" --copy=true'
                 sh '''
                     echo "Listing deployed files"
