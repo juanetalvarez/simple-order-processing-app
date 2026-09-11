@@ -6,6 +6,10 @@ pipeline {
         maven 'maven-3.9.9'
         jfrog 'jfrog-cli'
     }
+    environment {
+        BUILD_NAME = "${env.JOB_NAME}"
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -102,10 +106,8 @@ pipeline {
                     cd /tmp/dev/simple-order-processing-app-deploy/
                 '''
                 // Download the artifact
-                jf 'rt dl maven-dev-local/simple-order-processing-app-1.0-SNAPSHOT.jar'
+                jf 'rt dl maven-dev-local/target/${BUILD_NAME}-${NEW_VERSION}.jar'
                 sh '''
-                    cp target/*.jar /tmp/dev/simple-order-processing-app-deploy/
-
                     echo "Listing deployed files"
                     ls -l /tmp/dev/simple-order-processing-app-deploy/
                 '''
@@ -113,6 +115,7 @@ pipeline {
         }
 
         stage('Promote to PROD') {
+            // Manual sign-off approval
             input {
                 message 'Promote to PROD environment?'
                 ok 'Yes, Proceed'
