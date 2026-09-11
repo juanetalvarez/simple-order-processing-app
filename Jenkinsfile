@@ -102,11 +102,10 @@ pipeline {
                     echo "Creating deployment directory..."
                     mkdir -p /tmp/dev/simple-order-processing-app-deploy/
 
-                    echo "Copying JAR to deployment directory"
-                    cd /tmp/dev/simple-order-processing-app-deploy/
+                    echo "Downloading JAR to deployment directory"
                 '''
                 // Download the artifact
-                jf 'rt dl maven-dev-local/target/${ARTIFACT_ID}-${NEW_VERSION}.jar'
+                jf 'rt dl maven-dev-local/target/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/dev/simple-order-processing-app-deploy/'
                 sh '''
                     echo "Listing deployed files"
                     ls -l /tmp/dev/simple-order-processing-app-deploy/
@@ -126,9 +125,11 @@ pipeline {
                     echo "Creating deployment directory..."
                     mkdir -p /tmp/prod/simple-order-processing-app-deploy/
 
-                    echo "Copying JAR to deployment directory"
-                    cp target/*.jar /tmp/prod/simple-order-processing-app-deploy/
-
+                    echo "Downloading JAR to deployment directory"
+                '''
+                // Download the artifact
+                jf 'rt dl maven-dev-local/target/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/prod/simple-order-processing-app-deploy/'
+                sh '''
                     echo "Listing deployed files"
                     ls -l /tmp/prod/simple-order-processing-app-deploy/
                 '''
