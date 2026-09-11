@@ -53,7 +53,10 @@ pipeline {
         stage('Update pom.xml and package') {
             steps {
                 // Update version in pom.xml using Maven versions plugin and package
-                sh "mvn versions:set -DnewVersion=${NEW_VERSION} -DgenerateBackupPoms=false clean package"
+                sh '''
+                    mvn versions:set -DnewVersion=${NEW_VERSION} -DgenerateBackupPoms=false
+                    mvn package
+                '''
             }
         }
         stage('Commit and Tag') {
