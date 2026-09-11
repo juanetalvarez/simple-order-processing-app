@@ -91,7 +91,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to DEV') {
+        stage('Promote to DEV') {
             steps {
                 echo 'Starting Application Deployment to DEV...'
                 sh '''
@@ -112,14 +112,11 @@ pipeline {
             }
         }
 
-        stage('Approval') {
-            steps {
-                input message: "Do you want to procced to deployment PROD?",
-                ok: 'Yes, Deploy to PROD',
-                submitter: 'admin'
+        stage('Promote to PROD') {
+            input {
+                message 'Promote to PROD environment?'
+                ok 'Yes, Proceed'
             }
-        }
-        stage('Deploy to PROD') {
             steps {
                 echo 'Starting Application Deployment to PROD...'
                 sh '''
