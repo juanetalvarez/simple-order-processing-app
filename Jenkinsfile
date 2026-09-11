@@ -85,7 +85,7 @@ pipeline {
                 // Ping Artifactory.
                 jf 'rt ping'
                 // Upload artifac to a repository in Artifactory
-                jf 'rt u **/target/*.jar maven-dev-local/'
+                jf 'rt u target/*.jar maven-dev-local/'
                 // Publish the build-info to Artifactory.
                 jf 'rt bp'
             }
