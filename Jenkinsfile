@@ -126,10 +126,11 @@ pipeline {
                     mkdir -p /tmp/prod/simple-order-processing-app-deploy/
 
                     echo "Downloading JAR to deployment directory"
+                    echo '${env.JOB_NAME} ${env.BUILD_NUMBER} ${JOB_NAME} ${BUILD_NUMBER}'
                 '''
                 // Download the artifact
                 jf 'rt dl maven-dev-local/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/prod/simple-order-processing-app-deploy/'
-                jf 'rt bpr \"${env.JOB_NAME}\" \"${env.BUILD_NUMBER}\" maven-prod-local --comment="Released via Jenkins" --copy=true'
+                jf 'rt bpr ${JOB_NAME} ${BUILD_NUMBER} maven-prod-local --comment="Released via Jenkins" --copy=true'
                 sh '''
                     echo "Listing deployed files"
                     ls -l /tmp/prod/simple-order-processing-app-deploy/
