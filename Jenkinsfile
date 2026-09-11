@@ -40,9 +40,9 @@ pipeline {
                 script {
                     // Calculate next semantic version using conventional commits
                     def nextVersion = getNextSemanticVersion(
-                        majorPattern: '^[Bb]reaking.*',
-                        minorPattern: '^[Ff]eature.*',
-                        patchPattern: '^[Ff]ix.*'
+                        majorPattern: '^([Bb]reaking|[Mm]ajor).*',
+                        minorPattern: '^([Ff]eat|[Ff]eature|[Rr]efactor).*',
+                        patchPattern: '^([Ff]ix|[Pp]atch).*'
                     )
 
                     env.NEW_VERSION = nextVersion.toString()
