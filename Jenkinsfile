@@ -89,7 +89,7 @@ pipeline {
                 // Ping Artifactory.
                 jf 'rt ping'
                 // Upload artifac to a repository in Artifactory
-                jf 'rt u target/*.jar maven-dev-local/'
+                jf 'rt u "target/*.jar" "maven-dev-local/" --flat'
                 // Publish the build-info to Artifactory.
                 jf 'rt bp'
             }
@@ -105,7 +105,7 @@ pipeline {
                     echo "Downloading JAR to deployment directory"
                 '''
                 // Download the artifact
-                jf 'rt dl maven-dev-local/target/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/dev/simple-order-processing-app-deploy/'
+                jf 'rt dl maven-dev-local/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/dev/simple-order-processing-app-deploy/'
                 sh '''
                     echo "Listing deployed files"
                     ls -l /tmp/dev/simple-order-processing-app-deploy/
@@ -128,7 +128,7 @@ pipeline {
                     echo "Downloading JAR to deployment directory"
                 '''
                 // Download the artifact
-                jf 'rt dl maven-dev-local/target/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/prod/simple-order-processing-app-deploy/'
+                jf 'rt dl maven-dev-local/${ARTIFACT_ID}-${NEW_VERSION}.jar /tmp/prod/simple-order-processing-app-deploy/'
                 sh '''
                     echo "Listing deployed files"
                     ls -l /tmp/prod/simple-order-processing-app-deploy/
