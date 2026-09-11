@@ -6,9 +6,6 @@ pipeline {
         maven 'maven-3.9.9'
         jfrog 'jfrog-cli'
     }
-    environment {
-        BUILD_NAME = "${env.JOB_NAME}"
-    }
 
     stages {
         stage('Checkout Code') {
@@ -39,9 +36,12 @@ pipeline {
                 echo 'Running Integration Tests'
             }
         }
-        stage('Calculate Next Version') {
+        stage('Extract artifactId and Calculate Next Version') {
             steps {
                 script {
+                    // Extract the artifactId
+                    def pom = readMavenPom file: 'pom.xml'
+                    env.ARTIFACT_ID = pom.artifactId
                     // Calculate next semantic version using conventional commits
                     def nextVersion = getNextSemanticVersion(
                         majorPattern: '^([Bb]reaking|[Mm]ajor).*',
@@ -106,7 +106,7 @@ pipeline {
                     cd /tmp/dev/simple-order-processing-app-deploy/
                 '''
                 // Download the artifact
-                jf 'rt dl maven-dev-local/target/${BUILD_NAME}-${NEW_VERSION}.jar'
+                jf 'rt dl maven-dev-local/target/${ARTIFACT_ID}-${NEW_VERSION}.jar'
                 sh '''
                     echo "Listing deployed files"
                     ls -l /tmp/dev/simple-order-processing-app-deploy/
