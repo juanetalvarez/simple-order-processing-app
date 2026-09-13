@@ -116,7 +116,7 @@ pipeline {
         stage('Promote to PROD') {
             // Manual sign-off approval
             input {
-                message 'Promote ${ARTIFACT_ID}-${NEW_VERSION}.jar to PROD environment?'
+                message 'Promote ${env.ARTIFACT_ID}-${env.NEW_VERSION}.jar to PROD environment?'
                 ok 'Yes, Proceed to PROD'
             }
             steps {
