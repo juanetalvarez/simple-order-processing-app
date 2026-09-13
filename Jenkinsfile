@@ -116,8 +116,8 @@ pipeline {
         stage('Promote to PROD') {
             // Manual sign-off approval
             input {
-                message 'Promote to PROD environment?'
-                ok 'Yes, Proceed'
+                message 'Promote ${ARTIFACT_ID}-${NEW_VERSION}.jar to PROD environment?'
+                ok 'Yes, Proceed to PROD'
             }
             steps {
                 echo 'Starting Application Deployment to PROD...'
