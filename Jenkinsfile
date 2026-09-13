@@ -87,9 +87,7 @@ pipeline {
                 branch 'main'
             }
             steps {
-                sshagent(credentials: ['github-ssh-key']) {
-                    sh ' git push origin HEAD --tags'
-                }
+                sh 'git push origin HEAD --tags'
             }
         }
 
