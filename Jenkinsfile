@@ -8,9 +8,8 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checks for [skip ci]') {
             steps {
-                git branch: 'main', credentialsId: 'github-ssh-key', url: 'git@github.com:juanetalvarez/simple-order-processing-app.git'
                 // Download the latest changes from remote repository (origin) while simultaneously cleaning up deleted remote branches and local tag
                 sh 'git fetch --prune --prune-tags --tags origin'
                 // Checks the last commit for [ci skip] or [skip ci] and deletes the triggered build
@@ -37,6 +36,9 @@ pipeline {
             }
         }
         stage('Extract artifactId and Calculate Next Version') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
                     // Extract the artifactId
@@ -55,6 +57,9 @@ pipeline {
             }
         }
         stage('Update pom.xml and package') {
+            when {
+                branch 'main'
+            }
             steps {
                 // Update version in pom.xml using Maven versions plugin and package
                 sh '''
@@ -64,6 +69,9 @@ pipeline {
             }
         }
         stage('Commit and Tag') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
                     sh '''
@@ -75,6 +83,9 @@ pipeline {
             }
         }
         stage('Publish to Git') {
+            when {
+                branch 'main'
+            }
             steps {
                 sshagent(credentials: ['github-ssh-key']) {
                     sh ' git push origin HEAD --tags'
@@ -83,6 +94,9 @@ pipeline {
         }
 
         stage('Publish to Artifactory') {
+            when {
+                branch 'main'
+            }
             steps {
                 // Show the installed version of JFrog CLI.
                 jf '-v'
@@ -96,6 +110,9 @@ pipeline {
         }
 
         stage('Promote to DEV') {
+            when {
+                branch 'main'
+            }
             steps {
                 echo 'Starting Application Deployment to DEV...'
                 sh '''
@@ -115,6 +132,9 @@ pipeline {
 
         // Manual sign-off approval
         stage('Approval for PROD') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
                     input message: "Promote ${ARTIFACT_ID}-${NEW_VERSION}.jar to PROD environment?",
@@ -123,6 +143,9 @@ pipeline {
             }
         }
         stage('Promote to PROD') {
+            when {
+                branch 'main'
+            }
             steps {
                 echo 'Starting Application Deployment to PROD...'
                 sh '''
