@@ -113,12 +113,16 @@ pipeline {
             }
         }
 
-        stage('Promote to PROD') {
-            // Manual sign-off approval
-            script {
-                input message: "Promote ${ARTIFACT_ID}-${NEW_VERSION}.jar to PROD environment?",
-                      ok: 'Yes, Proceed to PROD'
+        // Manual sign-off approval
+        stage('Approval for PROD') {
+            steps {
+                script {
+                    input message: "Promote ${ARTIFACT_ID}-${NEW_VERSION}.jar to PROD environment?",
+                          ok: 'Yes, Proceed to PROD'
+                }
             }
+        }
+        stage('Promote to PROD') {
             steps {
                 echo 'Starting Application Deployment to PROD...'
                 sh '''
