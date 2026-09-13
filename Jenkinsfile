@@ -87,7 +87,9 @@ pipeline {
                 branch 'main'
             }
             steps {
-                sh 'git push origin HEAD --tags'
+                sshagent(credentials: ['github-ssh-key']) {
+                    sh 'git push origin HEAD --tags'
+                }
             }
         }
 
@@ -165,7 +167,7 @@ pipeline {
     }
     post {
         success {
-            echo 'Pipeline Executed Successfully. Application DEPLOYED.'
+            echo 'Pipeline Executed Successfully.'
         }
         failure {
             echo 'Build Failed. Please Check LOGS.'
