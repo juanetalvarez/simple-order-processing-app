@@ -14,17 +14,21 @@ pipeline {
                 scmSkip(deleteBuild: true, skipPattern: '.*(\\[ci skip\\]|\\[skip ci\\]).*')
             }
         }
-        stage('Parallel Build and Test') {
-            parallel {
-                stage('Build') {
-                    steps {
-                        sh 'mvn clean compile'
-                    }
-                }
-                stage('Unit Tests') {
-                    steps{
-                        sh 'mvn test'
-                    }
+        stage('Compile') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                echo 'Running unit tests...'
+                // Executes test cases (e.g., JUnit)
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    // Optional: Captures and visualizes test reports in Jenkins UI
+                    junit 'target/surefire-reports/*.xml'
                 }
             }
         }
