@@ -8,10 +8,12 @@ pipeline {
     }
 
     stages {
-        stage('Checks for [skip ci]') {
+        stage('Checks for [skip ci] and Synchronize local tags/branches with remote') {
             steps {
                 // Checks the last commit for [ci skip] or [skip ci] and deletes the triggered build
                 scmSkip(deleteBuild: true, skipPattern: '.*(\\[ci skip\\]|\\[skip ci\\]).*')
+                // Fetch remote tags/branches and delete local tags/branches that don't exist on the remote
+                sh 'git fetch --tags --prune-tags --prune --force'
             }
         }
         stage('Compile') {
